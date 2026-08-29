@@ -41,7 +41,12 @@ export class GeminiProvider extends BaseLLMProvider {
         generationConfig: {
           temperature: options?.temperature || this.config.temperature || 0.7,
           maxOutputTokens: options?.max_tokens || this.config.max_tokens || 4000,
-        },
+          // Gemini 3.x models think by default and count thinking tokens against
+          // maxOutputTokens, which can exhaust the budget before any visible
+          // text is produced. Keep thinking minimal so short responses aren't
+          // silently truncated to empty content.
+          thinkingConfig: { thinkingLevel: 'low' },
+        } as any,
         safetySettings: [
           {
             category: HarmCategory.HARM_CATEGORY_HARASSMENT,

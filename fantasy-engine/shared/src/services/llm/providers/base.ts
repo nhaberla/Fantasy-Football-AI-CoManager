@@ -35,7 +35,7 @@ export abstract class BaseLLMProvider implements LLMProvider {
         { role: 'user', content: 'Hello, this is a test. Please respond with just "OK".' }
       ];
       
-      const response = await this.chat(testMessages, { max_tokens: 10 });
+      const response = await this.chat(testMessages, { max_tokens: 50 });
       return response.content.toLowerCase().includes('ok');
     } catch (error) {
       console.error(`${this.name} config validation failed:`, error);
