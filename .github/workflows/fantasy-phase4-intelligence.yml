@@ -745,6 +745,8 @@ jobs:
     needs: [preflight-intelligence, advanced-intelligence]
     if: always() && needs.advanced-intelligence.result == 'failure' && needs.preflight-intelligence.outputs.should_run == 'true'
     timeout-minutes: 5
+    permissions:
+      issues: write
     steps:
       - name: Create Intelligence Failure Issue
         uses: actions/github-script@v7
