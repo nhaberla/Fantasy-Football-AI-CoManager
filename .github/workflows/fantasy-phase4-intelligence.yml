@@ -186,6 +186,18 @@ jobs:
           echo '{"current_season": 2025, "historical_data": []}' > seasonal_intelligence.json
           echo '[]' > decision_history.json
 
+      # Manual-run-only: exercises the ESPN roster/waiver-wire fetch (the code
+      # this session just changed) without going through the LLM step, so it
+      # isn't affected by Gemini quota issues. Remove once verified.
+      - name: Verify Roster and Waiver Data
+        if: github.event_name == 'workflow_dispatch'
+        working-directory: fantasy-engine/automation
+        env:
+          ESPN_S2: ${{ secrets.ESPN_S2 }}
+          ESPN_SWID: ${{ secrets.ESPN_SWID }}
+        run: |
+          node dist/cli.js roster --league "${{ secrets.LEAGUE_1_ID }}" --team "${{ secrets.LEAGUE_1_TEAM_ID }}" || true
+
       - name: Execute Phase 4 Intelligence
         id: intelligence
         working-directory: fantasy-engine/automation
