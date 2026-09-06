@@ -236,6 +236,11 @@ jobs:
           # Advanced Intelligence Configuration
           OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
           NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
+
+          # Manual-run-only diagnostic: dumps the raw ESPN stats array for a
+          # named free agent so we can inspect the real API schema instead of
+          # guessing from heuristics. Never enabled on scheduled runs.
+          DEBUG_ESPN_RAW: ${{ github.event_name == 'workflow_dispatch' && 'true' || '' }}
         run: |
           echo "🧠 Executing Phase 4 Advanced Intelligence"
           echo "Mode: ${{ matrix.mode }}"

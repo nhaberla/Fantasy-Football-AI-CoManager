@@ -543,15 +543,23 @@ export class ESPNApiService {
   private processPlayerData(playerData: any): Player {
     const player = playerData.player || playerData;
     const stats = player.stats || [];
-    
+
     // Use same logic as roster processing for consistency
     const currentWeek = this.getCurrentWeek();
     let weeklyProjection = 0;
     let actualPoints = 0;
-    
+
+    // TEMP DIAGNOSTIC: dump the raw stats array for a named player so we can see
+    // ESPN's actual field values (statSourceId/statSplitTypeId/scoringPeriodId/id)
+    // instead of guessing from thresholds. Remove once the real schema is confirmed.
+    if (process.env.DEBUG_ESPN_RAW && player.fullName?.toLowerCase().includes((process.env.DEBUG_ESPN_RAW_NAME || 'richardson').toLowerCase())) {
+      console.log(`🔬 RAW STATS for ${player.fullName} (id=${player.id}, defaultPositionId=${player.defaultPositionId}):`);
+      console.log(JSON.stringify(stats, null, 2));
+    }
+
     // Look for weekly projections first
-    const weeklyProjectionStat = stats.find((stat: any) => 
-      stat.statSourceId === 1 && 
+    const weeklyProjectionStat = stats.find((stat: any) =>
+      stat.statSourceId === 1 &&
       stat.scoringPeriodId === currentWeek
     );
     
